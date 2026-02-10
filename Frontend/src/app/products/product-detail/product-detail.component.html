@@ -1,0 +1,88 @@
+<div class="product-detail-container">
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="arrow">←</span>
+      <span>Back to Products</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="!loading && product" class="detail-content">
+    <div class="product-detail-card">
+      <div class="product-icon-large">🛍️</div>
+      
+      <div class="detail-section">
+        <h1 class="product-name">{{ product.name }}</h1>
+        <div class="product-price-large">
+          <span class="currency">$</span>
+          <span class="amount">{{ product.price | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="product.description">
+        <h3>Description</h3>
+        <p class="product-description">{{ product.description }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="product.categoryName">
+        <h3>Category</h3>
+        <div class="category-badge">
+          <span class="category-icon">📁</span>
+          <span>{{ product.categoryName }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Product Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Product ID</span>
+            <span class="info-value">{{ product.id }}</span>
+          </div>
+          <div class="info-item" *ngIf="product.categoryId">
+            <span class="info-label">Category ID</span>
+            <span class="info-value">{{ product.categoryId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⭐ Edit Price Button -->
+      <div class="action-section">
+        <button class="edit-price-button" (click)="onEditPrice()">
+          Edit Price
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loading && !product" class="error-state">
+    <div class="error-icon">❌</div>
+    <h3>Product not found</h3>
+    <p>The product you're looking for doesn't exist.</p>
+    <button class="back-button-error" (click)="goBack()">Go Back</button>
+  </div>
+</div>
+
+<!-- ⭐ Edit Price Modal -->
+<div *ngIf="showEditModal && product" class="modal-overlay" (click)="closeEditModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Update Product Price</h2>
+      <button class="close-button" (click)="closeEditModal()">×</button>
+    </div>
+    
+    <app-product-edit-form
+      [product]="product"
+      (productUpdated)="onProductUpdated()"
+      (cancelled)="closeEditModal()"
+    ></app-product-edit-form>
+  </div>
+</div>

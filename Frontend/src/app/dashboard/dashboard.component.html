@@ -1,0 +1,78 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h1>Product Management</h1>
+      <p class="welcome-text">Welcome back, {{ username }}!</p>
+    </div>
+    <button class="logout-button" (click)="onLogout()">
+      <span>Logout</span>
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <!-- Page Title and Action -->
+    <div class="page-header">
+      <div>
+        <h2>Categories</h2>
+        <p class="subtitle">Browse products by category</p>
+      </div>
+      <button class="create-button" (click)="onCreateCategory()">
+        <span class="plus-icon">+</span>
+        Create Category
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading categories...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && categories.length === 0" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No categories yet</h3>
+      <p>Create your first category to get started</p>
+      <button class="create-button" (click)="onCreateCategory()">
+        <span class="plus-icon">+</span>
+        Create Category
+      </button>
+    </div>
+
+    <!-- Category Cards Grid -->
+    <div *ngIf="!loading && categories.length > 0" class="categories-grid">
+      <div 
+        *ngFor="let category of categories" 
+        class="category-card"
+        (click)="onCategoryClick(category.id)"
+      >
+        <div class="card-icon">📁</div>
+        <div class="card-content">
+          <h3>{{ category.name }}</h3>
+          <p class="description">{{ category.description || 'No description' }}</p>
+          <div class="product-count">
+            <span class="count-badge">{{ getProductCount(category.id) }}</span>
+            <span class="count-label">Products</span>
+          </div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Category Modal -->
+<div *ngIf="showCreateCategoryModal" class="modal-overlay" (click)="closeCreateCategoryModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create New Category</h2>
+      <button class="close-button" (click)="closeCreateCategoryModal()">×</button>
+    </div>
+    <app-category-form
+      (categoryCreated)="onCategoryCreated()"
+      (cancelled)="closeCreateCategoryModal()"
+    ></app-category-form>
+  </div>
+</div>

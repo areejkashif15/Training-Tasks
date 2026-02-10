@@ -1,0 +1,104 @@
+<div class="product-list-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button class="back-button" (click)="goBack()">
+        <span class="arrow">←</span>
+        <span>Back to Categories</span>
+      </button>
+      <div class="header-info" *ngIf="category">
+        <h1>{{ category.name }}</h1>
+        <p class="category-description">{{ category.description || 'No description' }}</p>
+      </div>
+    </div>
+    <button class="create-button" (click)="onCreateProduct()">
+      <span class="plus-icon">+</span>
+      Add Product
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && products.length === 0" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No products yet</h3>
+      <p>Add your first product to this category</p>
+      <!-- <button class="create-button" (click)="onCreateProduct()">
+        <span class="plus-icon">+</span>
+        Add Product
+      </button> -->
+    </div>
+
+    <!-- Products Grid -->
+    <div *ngIf="!loading && products.length > 0" class="products-grid">
+      <div 
+        *ngFor="let product of products" 
+        class="product-card"
+        (click)="onProductClick(product.id, $event)"
+      >
+        <div class="product-icon">🛍️</div>
+        <div class="product-content">
+          <h3>{{ product.name }}</h3>
+          <div class="product-price">
+            <span class="currency">$</span>
+            <span class="amount">{{ product.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        
+        <!-- ⭐ Only DELETE button on hover -->
+        <button 
+          class="delete-hover-button" 
+          (click)="onDeleteProduct(product, $event)"
+          title="Delete Product"
+        >
+          Delete
+        </button>
+        
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Product Modal -->
+<div *ngIf="showCreateProductModal" class="modal-overlay" (click)="closeCreateProductModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Add New Product</h2>
+      <button class="close-button" (click)="closeCreateProductModal()">×</button>
+    </div>
+    
+    <app-product-form
+      [categoryId]="categoryId"
+      (productCreated)="onProductCreated()"
+      (cancelled)="closeCreateProductModal()"
+    ></app-product-form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteConfirmation && selectedProduct" class="modal-overlay delete-overlay" (click)="closeDeleteConfirmation()">
+  <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
+    <div class="delete-icon">⚠️</div>
+    <h2>Delete Product?</h2>
+    <p class="delete-message">
+      Are you sure you want to delete <strong>"{{ selectedProduct.name }}"</strong>?<br>
+      This action cannot be undone.
+    </p>
+    <div class="delete-actions">
+      <button class="cancel-button" (click)="closeDeleteConfirmation()">
+        Cancel
+      </button>
+      <button class="delete-confirm-button" (click)="confirmDelete()">
+        Yes, Delete
+      </button>
+    </div>
+  </div>
+</div>

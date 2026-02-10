@@ -1,0 +1,97 @@
+<form (ngSubmit)="onSubmit()" class="edit-form">
+  <!-- Product Name (Read-only) -->
+  <div class="form-group">
+    <label for="name">Product Name</label>
+    <input
+      type="text"
+      id="name"
+      [value]="product.name"
+      readonly
+      disabled
+      class="readonly-field"
+    />
+  </div>
+
+  <!-- Product ID (Read-only) -->
+  <div class="form-group">
+    <label for="id">Product ID</label>
+    <input
+      type="number"
+      id="id"
+      [value]="product.id"
+      readonly
+      disabled
+      class="readonly-field"
+    />
+  </div>
+
+  <!-- Description (Read-only) -->
+  <div class="form-group" *ngIf="product.description">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      [value]="product.description"
+      readonly
+      disabled
+      class="readonly-field"
+      rows="3"
+    ></textarea>
+  </div>
+
+  <!-- Current Price Display -->
+  <div class="price-comparison">
+    <div class="price-item">
+      <span class="label">Current Price</span>
+      <span class="old-price">${{ product.price | number:'1.2-2' }}</span>
+    </div>
+    <div class="arrow-right">→</div>
+    <div class="price-item">
+      <span class="label">New Price</span>
+      <span class="new-price">${{ newPrice | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <!-- New Price (Editable) -->
+  <div class="form-group">
+    <label for="price">Update Price <span class="required">*</span></label>
+    <input
+      type="number"
+      id="price"
+      name="price"
+      [(ngModel)]="newPrice"
+      placeholder="0.00"
+      [disabled]="isSubmitting"
+      required
+      min="0.01"
+      max="1000"
+      step="0.01"
+      class="price-input"
+    />
+    <span class="helper-text">Price must be between $0.01 and $1000.00 (max 2 decimal places)</span>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="form-actions">
+    <button 
+      type="button" 
+      class="cancel-button"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+    >
+      Cancel
+    </button>
+    <button 
+      type="submit" 
+      class="submit-button"
+      [disabled]="isSubmitting || newPrice <= 0 || newPrice > 1000"
+    >
+      <span *ngIf="!isSubmitting">Update Price</span>
+      <span *ngIf="isSubmitting">Updating...</span>
+    </button>
+  </div>
+</form>

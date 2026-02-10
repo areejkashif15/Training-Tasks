@@ -1,0 +1,76 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Left Side - Form -->
+    <div class="login-form-section">
+      <div class="login-header">
+        <h1>Product Management System</h1>
+        <p>Welcome back! Please login to your account</p>
+      </div>
+
+      <!-- two way binding [(ngModel)] for username and password-->
+      <form (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Username Field -->
+        <div class="form-group">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="loginData.username"  
+            placeholder="Username"
+            [disabled]="isLoading"
+            required
+          />
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="loginData.password"
+            placeholder="Password"
+            [disabled]="isLoading"
+            required
+          />
+        </div>
+
+        <!-- Error Message -->
+         <!-- onky show this if errorMessage is NOT empty -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="login-button"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading">Signing in...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Side - Welcome Panel -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <h2>Welcome Back!</h2>
+        <p>Manage your products and categories efficiently with our comprehensive management system.</p>
+        
+        <div class="test-credentials">
+          <strong>Test Credentials</strong>
+          <div class="credential-item">
+            <span class="label">Username:</span>
+            <span class="value">admin</span>
+          </div>
+          <div class="credential-item">
+            <span class="label">Password:</span>
+            <span class="value">password123</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
